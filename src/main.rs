@@ -3,8 +3,8 @@ extern crate glfw;
 use glfw::{Action, Context, Key};
 
 fn main() {
-   use glfw::fail_on_errors;
-let mut glfw = glfw::init(fail_on_errors!()).unwrap();
+    use glfw::fail_on_errors;
+    let mut glfw = glfw::init(fail_on_errors!()).unwrap();
 
     // Create a windowed mode window and its OpenGL context
     let (mut window, events) = glfw.create_window(300, 300, "Hello this is window", glfw::WindowMode::Windowed)
