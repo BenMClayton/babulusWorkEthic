@@ -1,28 +1,34 @@
-use winit::{event_loop::EventLoop, event::WindowEvent};
-use winit::window::WindowBuilder;
+extern crate glfw;
+
+use glfw::{Action, Context, Key};
 
 fn main() {
-    let event_loop = EventLoop::new();
-    let window_builder = WindowBuilder::new()
-        .with_title("My Window")
-        .with_inner_size(winit::dpi::LogicalSize::new(800.0, 600.0));
-    let window = window_builder.build(&event_loop).unwrap();
+   use glfw::fail_on_errors;
+let mut glfw = glfw::init(fail_on_errors!()).unwrap();
 
-    event_loop.run(move |event, _, control_flow| {
-        *control_flow = winit::event_loop::ControlFlow::Poll;
+    // Create a windowed mode window and its OpenGL context
+    let (mut window, events) = glfw.create_window(300, 300, "Hello this is window", glfw::WindowMode::Windowed)
+        .expect("Failed to create GLFW window.");
 
-        match event {
-            winit::event::Event::WindowEvent { event, .. } => match event {
-                WindowEvent::KeyboardInput { input, .. } => {
-                    match input.virtual_keycode {
-                        Some(winit::event::VirtualKeyCode::Escape) => *control_flow = winit::event_loop::ControlFlow::Exit,
-                        _ => (),
-                    }
+    // Make the window's context current
+    window.make_current();
+    window.set_key_polling(true);
+
+    // Loop until the user closes the window
+    while !window.should_close() {
+        // Swap front and back buffers
+        window.swap_buffers();
+
+        // Poll for and process events
+        glfw.poll_events();
+        for (_, event) in glfw::flush_messages(&events) {
+            println!("{:?}", event);
+            match event {
+                glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
+                    window.set_should_close(true)
                 },
-                WindowEvent::CloseRequested => *control_flow = winit::event_loop::ControlFlow::Exit,
-                _ => (),
-            },
-            _ => (),
+                _ => {},
+            }
         }
-    });
+    }
 }
