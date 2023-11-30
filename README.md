@@ -8,7 +8,7 @@ key presses and applications visited. I would like to create a dashboard as well
 Development requires rust and cargo and Cmake
 
 ### Current Goals
-- Make the application run on startup
+- Run application on startup
 - Store the information on my own remote database
 - track key presses
 - track application open time
