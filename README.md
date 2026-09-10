@@ -1,15 +1,36 @@
 # Babulus Work Ethic
 
-This is a private application for specifically Ben Clayton to analyze his own work ethic by tracking
-key presses and applications visited. I would like to create a dashboard as well
+A small Rust/GLFW activity-measurement experiment. The current prototype times
+an explicit work session and counts key presses received by its own window,
+showing both values live in the title bar.
 
-## Getting Started
+The project deliberately does **not** install a global keyboard hook, inspect
+other applications, run at startup, or transmit/persist activity data. That
+keeps the prototype easy to review and avoids collecting sensitive input.
 
-Development requires rust and cargo and Cmake
+## Run
 
-### Current Goals
-- Run application on startup
-- Store the information on my own remote database
-- track key presses
-- track application open time
-- create yearly graphs
+Requirements:
+
+- Rust 1.70 or newer
+- CMake and a C/C++ toolchain supported by the `glfw` crate
+
+```sh
+cargo run
+```
+
+Press any keys while the window is focused to update the counter. Press `Esc`
+or close the window to end the session and print a summary.
+
+## What this demonstrates
+
+- a native GLFW event loop in Rust;
+- explicit input-event handling;
+- lightweight session metrics using monotonic time; and
+- privacy-aware scoping for activity-tracking software.
+
+## Status
+
+This is a bounded desktop prototype, not a background productivity monitor.
+Possible future work includes opt-in local persistence, pause/resume controls,
+and charts that aggregate session totals without recording typed content.

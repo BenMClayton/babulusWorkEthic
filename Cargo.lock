@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "babulusWorkEthic"
+name = "babulus-work-ethic"
 version = "0.1.0"
 dependencies = [
  "glfw",

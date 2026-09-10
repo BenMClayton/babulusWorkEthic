@@ -1,34 +1,53 @@
-extern crate glfw;
-
 use glfw::{Action, Context, Key};
+use std::time::{Duration, Instant};
 
 fn main() {
     use glfw::fail_on_errors;
-    let mut glfw = glfw::init(fail_on_errors!()).unwrap();
+    let mut glfw = glfw::init(fail_on_errors!()).expect("GLFW could not be initialised");
 
-    // Create a windowed mode window and its OpenGL context
-    let (mut window, events) = glfw.create_window(300, 300, "Hello this is window", glfw::WindowMode::Windowed)
-        .expect("Failed to create GLFW window.");
+    let (mut window, events) = glfw
+        .create_window(520, 220, "Babulus Work Ethic", glfw::WindowMode::Windowed)
+        .expect("A GLFW window could not be created");
 
-    // Make the window's context current
     window.make_current();
     window.set_key_polling(true);
+    window.set_close_polling(true);
 
-    // Loop until the user closes the window
+    let started_at = Instant::now();
+    let mut last_title_update = Instant::now();
+    let mut key_presses = 0_u64;
+
     while !window.should_close() {
-        // Swap front and back buffers
         window.swap_buffers();
+        glfw.wait_events_timeout(1.0 / 60.0);
 
-        // Poll for and process events
-        glfw.poll_events();
         for (_, event) in glfw::flush_messages(&events) {
-            println!("{:?}", event);
             match event {
                 glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
-                    window.set_should_close(true)
-                },
-                _ => {},
+                    window.set_should_close(true);
+                }
+                glfw::WindowEvent::Key(_, _, Action::Press, _) => {
+                    key_presses += 1;
+                }
+                _ => {}
             }
         }
+
+        if last_title_update.elapsed() >= Duration::from_secs(1) {
+            let elapsed = started_at.elapsed().as_secs();
+            window.set_title(&format!(
+                "Babulus Work Ethic | active {:02}:{:02} | key presses {}",
+                elapsed / 60,
+                elapsed % 60,
+                key_presses
+            ));
+            last_title_update = Instant::now();
+        }
     }
+
+    println!(
+        "Session complete: {} seconds active, {} key presses inside the app window.",
+        started_at.elapsed().as_secs(),
+        key_presses
+    );
 }
